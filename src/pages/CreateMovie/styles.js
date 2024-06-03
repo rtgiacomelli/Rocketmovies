@@ -8,7 +8,7 @@ export const Content = styled.div`
   flex-direction: column;
   padding: 40px 123px;
 
-  > a {
+  > .voltar {
     display: flex;
     align-items: center;
     text-decoration: none;
@@ -34,17 +34,13 @@ export const Content = styled.div`
 
   .inputArea {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 40px;
     margin-bottom: 40px;
   }
 
-  .input {
-    display: flex;
-    gap: 40px;
-  }
-
   .observations {
+    margin-top: 90px;
     height: 274px;
     transform: translateY(-40%);
 }

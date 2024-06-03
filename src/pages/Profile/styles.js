@@ -14,7 +14,10 @@ export const Container = styled.div`
 
     padding: 0 124px;
 
-    a {
+    button {
+      background: none;
+      border: none;
+
       display: flex;      
 
       gap: 3px;

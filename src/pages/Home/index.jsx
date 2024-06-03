@@ -1,5 +1,9 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { FiPlus } from 'react-icons/fi'
-import { Link } from 'react-router-dom';
+
+import { api } from '../../services/api'
 
 import { Container, Content, NewMovie } from './styles'
 
@@ -8,56 +12,66 @@ import { Button } from '../../components/Button'
 import { Movie } from '../../components/Movie'
 
 export function Home() {
-  return(
-    <Container>
-      <Header />
-      
-      <Content>
-        <h1>
-        Meus filmes
-        </h1>
+  
+  const [search, setSearch] = useState("");
+  const [tags, setTags] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [tagsSelected, setTagsSelected] = useState([]);
 
-        <NewMovie to="/CreateMovie">
-          <Button title={<><FiPlus /> Adicionar filme</>}>
-          </Button>
-        </NewMovie>
-      </Content>
+  const navigate = useNavigate();
 
-      <div className="scroll">
-        <Movie filledStars={4} data={{
-            title: 'Interstellar',
-            description: 'Pragas nas colheitas fizeram a civilização humana regredir para uma sociedade agrária em futuro de data desconhecida. Cooper, ex-piloto da NASA, tem uma fazenda com sua família. Murphy, a filha de dez anos de Cooper, acredita que seu quarto está assombrado por um fantasma que tenta se...',
-            tags: [
-              {id: '1', name: 'Ficção Científica'},
-              {id: '2', name: 'Drama'},
-              {id: '3', name: 'Família'}
-            ]
-          }}
-          />
+  function handleDetails(id) {
+    navigate(`/MoviePreview/${id}`);
+  }
 
-        <Movie filledStars={4} data={{
-            title: 'Interstellar',
-            description: 'Pragas nas colheitas fizeram a civilização humana regredir para uma sociedade agrária em futuro de data desconhecida. Cooper, ex-piloto da NASA, tem uma fazenda com sua família. Murphy, a filha de dez anos de Cooper, acredita que seu quarto está assombrado por um fantasma que tenta se...',
-            tags: [
-              {id: '1', name: 'Ficção Científica'},
-              {id: '2', name: 'Drama'},
-              {id: '3', name: 'Família'}
-            ]
-          }}
-          />
+  useEffect(() => {
+    async function fetchTags() {
+      const response = await api.get('/tags');
+      setTags(response.data);
+    }
 
-        <Movie filledStars={4} data={{
-            title: 'Interstellar',
-            description: 'Pragas nas colheitas fizeram a civilização humana regredir para uma sociedade agrária em futuro de data desconhecida. Cooper, ex-piloto da NASA, tem uma fazenda com sua família. Murphy, a filha de dez anos de Cooper, acredita que seu quarto está assombrado por um fantasma que tenta se...',
-            tags: [
-              {id: '1', name: 'Ficção Científica'},
-              {id: '2', name: 'Drama'},
-              {id: '3', name: 'Família'}
-            ]
-          }}
-          />  
-      </div>
+    fetchTags();
+  }, []);
 
-    </Container>
-  );
+  useEffect(() => {
+    async function fetchNotes() {
+      const response = await api.get(`/notes?title=${search}`);
+      setNotes(response.data);
+    }
+
+    fetchNotes();
+
+  }, [tagsSelected, search]);
+
+  return (
+  <Container>
+    <Header />
+
+    <Content>
+      <h1>Meus filmes</h1>
+
+      <NewMovie to="/CreateMovie">
+        <Button title={<><FiPlus /> Adicionar filme</>}>
+        </Button>
+      </NewMovie>
+    </Content>
+
+    <div className="scroll">
+      {
+        notes.map(note => {
+          return (
+            <Movie
+              id={note.id}
+              key={String(note.id)}
+              data={note}
+              filledStars={Number(note.rating)}
+              onClick={() => handleDetails(note.id)}
+            />
+          );
+        })
+      }
+    </div>
+
+  </Container>
+);
 }

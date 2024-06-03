@@ -3,7 +3,7 @@ import { Tag } from '../Tag';
 import { Rating } from '../../components/Rating'
 import { Link } from 'react-router-dom';
 
-export function Movie({ id, data, filledStars, ...rest }){
+export function Movie({ id, data, filledStars, ...rest }){ 
   if (!data || !data.title) {
     return null;
   }
