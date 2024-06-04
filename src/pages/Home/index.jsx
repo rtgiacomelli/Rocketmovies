@@ -14,34 +14,23 @@ import { Movie } from '../../components/Movie'
 export function Home() {
   
   const [search, setSearch] = useState("");
-  const [tags, setTags] = useState([]);
-  const [notes, setNotes] = useState([]);
-  const [tagsSelected, setTagsSelected] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   const navigate = useNavigate();
 
-  function handleDetails(id) {
+  function handleMoviePreview(id) {
     navigate(`/MoviePreview/${id}`);
   }
 
   useEffect(() => {
-    async function fetchTags() {
-      const response = await api.get('/tags');
-      setTags(response.data);
-    }
-
-    fetchTags();
-  }, []);
-
-  useEffect(() => {
-    async function fetchNotes() {
+    async function fetchMovies() {
       const response = await api.get(`/notes?title=${search}`);
-      setNotes(response.data);
+      setMovies(response.data);
     }
 
-    fetchNotes();
+    fetchMovies();
 
-  }, [tagsSelected, search]);
+  }, []);
 
   return (
   <Container>
@@ -58,14 +47,14 @@ export function Home() {
 
     <div className="scroll">
       {
-        notes.map(note => {
+        movies.map(note => {
           return (
             <Movie
               id={note.id}
               key={String(note.id)}
               data={note}
               filledStars={Number(note.rating)}
-              onClick={() => handleDetails(note.id)}
+              onClick={() => handleMoviePreview(note.id)}
             />
           );
         })

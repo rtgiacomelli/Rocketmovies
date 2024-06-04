@@ -4,7 +4,7 @@ export const Container = styled.div`
   .content {
     padding: 40px 123px;
   
-    > a {
+    > button {
       display: flex;
       align-items: center;
       text-decoration: none;
@@ -41,7 +41,7 @@ export const Container = styled.div`
 
       .username {
         display: flex;
-        gap: 3px;
+        gap: 6px;
         align-items: center;
 
         img {
@@ -50,17 +50,19 @@ export const Container = styled.div`
           border-radius: 50%;
         }
 
-        .user {
+        button {
           font-family: 'Roboto', sans-serif;
           font-size: 16px;
           text-decoration: none;
           color: ${({ theme }) => theme.COLORS.WHITE};
+          border: none;
+          background-color: transparent;
         }
       }
 
       .dateTime {
         display: flex;
-        gap: 3px;
+        gap: 6px;
         align-items: center;
         
         .clock {
@@ -72,6 +74,18 @@ export const Container = styled.div`
           font-size: 16px;
         }
       }
+
+    }
+
+    .delete {
+      display: flex;
+      gap: 40px;
+
+      margin-top: 40px;
+      margin-bottom: 16px;
+
+      background-color: ${({ theme }) => theme.COLORS.BLACK};
+      color: ${({ theme }) => theme.COLORS.PINK};
     }
 
     .tags {

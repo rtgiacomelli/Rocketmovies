@@ -61,16 +61,11 @@ export const Content = styled.div`
     border-radius: 8px;
   }
 
-  .buttons {
+  .save {
     display: flex;
     gap: 40px;
 
     margin-top: 40px;
     margin-bottom: 16px;
-  }
-
-  .delete {
-    background-color: ${({ theme }) => theme.COLORS.BLACK};
-    color: ${({ theme }) => theme.COLORS.PINK};
   }
 `

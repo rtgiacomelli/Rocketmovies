@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FiArrowLeft } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
 
 import { Header } from '../../components/Header'
 import { Button } from '../../components/Button'
@@ -133,17 +132,12 @@ export function CreateMovie () {
         />
       </div>
 
-      <div className='buttons'>
         <Button
-          className="delete"
-          title="Excluir filme"
-        />
-
-        <Button
+          className="save"
           title="Salvar alterações"
           onClick={handleNewNote}
         />
-      </div>
+
     </Content>
     </Container>
   )

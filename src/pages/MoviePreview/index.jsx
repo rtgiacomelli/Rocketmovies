@@ -1,8 +1,8 @@
 import avatarPlaceholder from '../../assets/avatar_placeholder.svg'
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 
 import { api } from '../../services/api';
 
@@ -13,29 +13,74 @@ import { Tag } from '../../components/Tag';
 import { Rating } from '../../components/Rating';
 import { Container } from './styles';
 import { RatingContainer } from './styles';
+import { Button } from '../../components/Button';
 
 export function MoviePreview() {
   const [data, setData] = useState(null);
-
+ 
   const params = useParams();
+  const navigate = useNavigate();
+  
+  const { user } = useAuth();
+
+  function handleBack() {
+    navigate(-2);
+  };
+
+  async function handleRemove() {
+    const confirm = window.confirm("Deseja realmente remover a nota?");
+    
+    if (confirm) {
+      await api.delete(`/notes/${params.id}`);
+      navigate(-2);
+    }
+  }
+
+  function handleClickProfile() {
+    navigate('/Profile');
+  };
+
+  function formatDate(date) {
+    const dateFormat = new Date(date);
+    const formattedDate = dateFormat.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "America/Sao_Paulo",
+  });
+
+  const splittedDate = formattedDate.split(',');
+  const formattedDateString = splittedDate[0] + ' às ' + splittedDate[1];
+
+  return formattedDateString;
+  };
 
   useEffect(() => {
     async function fetchMovie() {
       const response = await api.get(`/notes/${params.id}`);
+
+      response.data.updated_at = formatDate(response.data.updated_at);
+
       setData(response.data);
     }
 
     fetchMovie();
-  }, [params.id]);
+
+  }, []);
   
+  const avatarUrl = user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}` : avatarPlaceholder
+
   return (
     <Container>
       <Header />
         <div className="content">
-          <Link to="/">
+          <button onClick={handleBack}>
             <FiArrowLeft />
-            <p>Voltar</p>
-          </Link>
+            Voltar
+          </button>
 
           {
             data &&
@@ -49,12 +94,15 @@ export function MoviePreview() {
 
             <div className='userInfo'>
               <div className="username">
-                <img src="https://github.com/rtgiacomelli.png" alt="Imagem do usuário" />
-                <Link className="user" to="/Profile">
+                <img 
+                  src={avatarUrl}
+                  alt={user.name}
+                />
+                <button className="user" onClick={handleClickProfile}>
                   <p>
-                    Por Rodolfo Giacomelli 
+                    Por {user.name}
                   </p>
-                </Link>
+                </button>
               </div>
             
               <div className="dateTime">
@@ -62,7 +110,7 @@ export function MoviePreview() {
                   <FiClock />
                 </p>
                 <p className='date'>
-                  23/05/22 às 08:00
+                  {data.updated_at}
                 </p>
               </div>
             </div>
@@ -73,10 +121,11 @@ export function MoviePreview() {
                 {
                   data.tags.map(tag => 
                     <Tag 
-                      key={tag.id}
+                      key={String(tag.id)}
                       title={tag.name}
-                      style={{ backgroundColor: "#282124" }}
-                    />)
+                      // style={{ backgroundColor: "#282124" }}
+                    />
+                  )
                 }
               </div>
             }
@@ -86,7 +135,15 @@ export function MoviePreview() {
             </p>
             </div>
           }
+
+          <Button
+            className="delete"
+            title="Excluir filme"
+            onClick={handleRemove}
+          />
+
         </div>
+
     </Container>
   )
 }

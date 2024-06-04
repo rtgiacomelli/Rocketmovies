@@ -13,28 +13,18 @@ import { Container, Profile, Search, Brand } from './styles';
 
 export function Header() {
   const [search, setSearch] = useState("");
-  const [tags, setTags] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   const { signOut, user } = useAuth();
   const navigation = useNavigate();
 
   useEffect(() => {
-    async function fetchTags() {
-      const response = await api.get('/tags');
-      setTags(response.data);
-    }
-
-    fetchTags();
-  }, []);
-
-  useEffect(() => {
-    async function fetchNotes() {
+    async function fetchMovies() {
       const response = await api.get(`/notes?title=${search}`);
-      setNotes(response.data);
+      setMovies(response.data);
     }
 
-    fetchNotes();
+    fetchMovies();
 
   }, [search]);
 
@@ -43,7 +33,7 @@ export function Header() {
     signOut();
   }
 
-  const avatarUrl = user.avatar ? `${api.defaults.baseURL}files/${user.avatar}` : avatarPlaceholder
+  const avatarUrl = user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}` : avatarPlaceholder
 
   return(
     <Container>

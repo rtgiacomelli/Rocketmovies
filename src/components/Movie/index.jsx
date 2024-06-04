@@ -3,12 +3,12 @@ import { Tag } from '../Tag';
 import { Rating } from '../../components/Rating'
 import { Link } from 'react-router-dom';
 
-export function Movie({ id, data, filledStars, ...rest }){ 
+export function Movie({ id, data, filledStars, tags, ...rest }){ 
   if (!data || !data.title) {
     return null;
   }
 
-  return (
+  return ( 
     <Link to={`/MoviePreview/${id}`}>
       <Container {...rest}>
         <h1>{data.title}</h1>
